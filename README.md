@@ -34,6 +34,7 @@ npm test
 ## Deployment
 
 Parameters (environment variables):
+- `PORT`: port of the server (default: 3000)
 - `NB_PAGES`: select the number of concurent pages (default: 3)
 
 ## Contributing

@@ -4,7 +4,7 @@ RUN apk add chromium
 
 WORKDIR /app
 
-COPY package.json /app/
+COPY package*.json /app/
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
