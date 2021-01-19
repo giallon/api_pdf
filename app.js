@@ -1,8 +1,14 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const cors = require('cors')
+const app = express();
 
-const routes = require('./routes')
+const PdfEngine = require('./core/pdf_engine');
+const Router = require('./routes');
 
-app.use(routes)
+const pdf_engine = new PdfEngine(process.env.NB_PAGES);
+const router = new Router({pdf_engine});
 
-module.exports = app
+app.use(cors());
+app.use(router.routes);
+
+module.exports = app;

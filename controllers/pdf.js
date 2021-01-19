@@ -1,19 +1,21 @@
-const {readbody} = require('../util');
-const { Engine } = require('../core/engine');
+const { readStream } = require('../util');
 
-const engine = new Engine();
+class PdfController {
+  constructor(engine) {
+    this.engine = engine;
+    this.create = this._create.bind(this);
+  }
 
-const PdfController = {};
-
-PdfController.create = async (req, res) => {
-    const body = await readbody(req);
-    engine.toPdf(body, async (buffer) => {
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': buffer.length
-        });
-        res.send(buffer);
+  async _create(req, res) {
+    const body = await readStream(req);
+    this.engine.toPdf(body, async (buffer) => {
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': buffer.length
+      });
+      res.send(buffer);
     });
-};
+  }
+}
 
 module.exports = PdfController;

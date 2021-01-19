@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-const { expect, assert } = require('chai');
+const { expect } = require('chai');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const chaiString = require('chai-string');
@@ -16,50 +16,49 @@ let server;
 const port = process.env.PORT || 3000;
 
 before((done) => {
-    server = app.listen(port,  () => {
-        done();
-    });
+  server = app.listen(port, () => {
+    console.log('Test server listening on port ' + port)
+    done();
+  });
 });
 
 after((done) => {
-    server.close();
-    done();
+  server.close();
+  done();
 });
 
 describe('Pdf', () => {
-    describe('/POST pdf', () => {
-        it('should generate PDF from html document', (done) => {
-            chai.request(server)
-            .post('/pdf')
-            .send('<html><body>Hello World</body></html>')
-            .buffer()
-            .end((err, res) => {
-                if (err) { done(err); }
-                res.should.have.status(200);
-                string = res.body.toString();
-                string.should.startWith('%PDF-1.4');
-                string.trim().should.endWith('%%EOF');
-                expect(string).to.have.lengthOf.above(100);
-                done();
-            });
-        });
-
-        it('should generate PDF from html document with long lines', (done) => {
-            chai.request(server)
-            .post('/pdf')
-            .send(fs.readFileSync("./tests/fixtures/document_with_long_line.html"))
-            // .attach('imageField', fs.readFileSync('avatar.png'), 'avatar.png')
-            .buffer()
-            .end((err, res) => {
-                if (err) { done(err); }
-                res.should.have.status(200);
-                //fs.writeFileSync("test.pdf", res.body);
-                string = res.body.toString();
-                string.should.startWith('%PDF-1.4');
-                string.trim().should.endWith('%%EOF');
-                expect(string).to.have.lengthOf.above(100);
-                done();
-            });
+  describe('/POST pdf', () => {
+    it('should generate PDF from html document', (done) => {
+      chai.request(server)
+        .post('/pdf')
+        .send('<html><body>Hello World</body></html>')
+        .buffer()
+        .end((err, res) => {
+          if (err) { done(err); }
+          res.should.have.status(200);
+          string = res.body.toString();
+          string.should.startWith('%PDF-1.4');
+          string.trim().should.endWith('%%EOF');
+          expect(string).to.have.lengthOf.above(100);
+          done();
         });
     });
+
+    it('should generate PDF from html document with long lines', (done) => {
+      chai.request(server)
+        .post('/pdf')
+        .send(fs.readFileSync("./tests/fixtures/document_with_long_line.html"))
+        .buffer()
+        .end((err, res) => {
+          if (err) { done(err); }
+          res.should.have.status(200);
+          string = res.body.toString();
+          string.should.startWith('%PDF-1.4');
+          string.trim().should.endWith('%%EOF');
+          expect(string).to.have.lengthOf.above(100);
+          done();
+        });
+    });
+  });
 });

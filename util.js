@@ -1,9 +1,9 @@
-function readbody(req) {
-    return new Promise((res, rej) => {
-        let body = '';
-        req.on("data", c => body += c)
-        req.on('end', () => res(body))
-    })
+function readStream(req) {
+  return new Promise((res) => {
+    let data = '';
+    req.on('data', c => data += c)
+    req.on('end', () => res(data))
+  });
 }
 
-module.exports = { readbody }
+module.exports = { readStream }

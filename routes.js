@@ -1,9 +1,20 @@
 const express = require('express');
+const PdfController = require('./controllers/pdf');
 
-const router = express.Router();
+class Router {
+  constructor({ pdf_engine }) {
+    this._init_controllers({ pdf_engine });
+    this._init_routes();
+  }
 
-//Pdf route
-const pdfController = require('./controllers/pdf');
-router.post('/pdf', pdfController.create);
+  _init_controllers({ pdf_engine }) {
+    this.pdfController = new PdfController(pdf_engine);
+  }
 
-module.exports = router
+  _init_routes() {
+    this.routes = express.Router();
+    this.routes.post('/pdf', this.pdfController.create);
+  }
+}
+
+module.exports = Router;
